@@ -5,7 +5,7 @@ import streamlit as st
 from openai import OpenAI
 
 
-st.title("Simple Chat App with Ollama")
+st.title("Simple Chat")
 
 load_dotenv()
 OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY")
@@ -17,7 +17,7 @@ client = OpenAI(
 
 # Set default model if not already set
 if "chat_llm" not in st.session_state:
-    st.session_state["chat_llm"] = "gemma3:27b-cloud"
+    st.session_state["chat_llm"] = "gemma3:12b"
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -27,8 +27,9 @@ if "messages" not in st.session_state:
 
 # Display chat messages from history on app rerun
 for message in st.session_state["messages"]:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    if message["role"] != "system":
+        with st.chat_message(message["role"]):
+             st.markdown(message["content"])
 
 if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
