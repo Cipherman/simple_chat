@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  ollama-server:
+    image: ollama/ollama:latest
+    container_name: ollama-server
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - ollama-network
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: simple_chat/Dockerfile
+    container_name: simple_chat
+    ports:
+      - "8501:8501"
+    networks:
+      - ollama-network
+    depends_on:
+      - ollama-server
+    restart: unless-stopped
+    environment:
+      - OLLAMA_BASE_URL=http://ollama-server:11434/v1
+
+networks:
+  ollama-network:
+    driver: bridge
+
+volumes:
+  ollama-data:
+    driver: local

@@ -11,13 +11,13 @@ load_dotenv()
 OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY")
 
 client = OpenAI(
-    base_url="https://ollama.com/v1",
+    base_url=os.getenv("OLLAMA_BASE_URL", "http://ollama-server:11434/v1"),
     api_key=OLLAMA_API_KEY,
 )
 
 # Set default model if not already set
 if "chat_llm" not in st.session_state:
-    st.session_state["chat_llm"] = "gemma3:12b"
+    st.session_state["chat_llm"] = "gemma3:1b"
 
 # Initialize chat history
 if "messages" not in st.session_state:
